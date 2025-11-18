@@ -47,3 +47,8 @@ Feature: Practice Management Microservice
     Given the endpoint DELETE /api/v2/schedules/{id} is available
     When a valid ID is sent
     Then the system deletes the schedule and returns 204 No Content
+
+Scenario: Retrieve odontologists by shift name 
+    Given the endpoint GET /api/v1/odontologists/shift/Afternoon/odontologists is available
+    When a user requests the odontologists for the "Afternoon" shift
+    Then the system returns 200 OK and the list of odontologists assigned to that shift
