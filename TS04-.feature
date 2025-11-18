@@ -29,3 +29,16 @@ Feature: Appointment Microservice
     Given the endpoint PUT /api/v2/appointments/{id} exists
     When the user requests a change or cancellation within policy
     Then the system validates rules and updates the status, invoking Payments if needed
+
+Scenario: Fail to schedule appointment due to overlapping
+    Given the endpoint POST /api/v1/appointment is available
+    And an appointment for odontologist "5" exists on "2025-11-20" from "10:00" to "11:00"
+    When a patient tries to schedule an appointment with odontologist "5" on "2025-11-20" at "10:30"
+    Then the system rejects the request
+    And responds with 409 Conflict and a message "Schedule overlap detected"
+
+  Scenario: Fail to schedule appointment in a past date
+    Given the endpoint POST /api/v1/appointment is available
+    When a patient tries to schedule an appointment for "2024-01-10"
+    Then the system rejects the request
+    And responds with 400 Bad Request and a message "Cannot schedule appointments in the past"
