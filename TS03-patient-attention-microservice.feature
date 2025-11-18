@@ -33,3 +33,31 @@ Feature: Patient Attention Microservice
     And the patient has allergy records
     When the dentist adds a medication matching an allergy
     Then the system shows a warning and requires confirmation before saving
+
+Scenario: Update patient anamnesis (US13)
+    Given the endpoint PUT /api/v1/anamnesis/1 is available
+    When the odontologist updates anamnesis "1" with "high blood pressure" and "penicillin allergy"
+    Then the system updates the anamnesis
+    And responds with 200 OK
+
+  Scenario: Update a tooth status on the odontogram (US14)
+    Given the endpoint PUT /api/v1/odontogram-item/10 is available
+    When the odontologist updates item "10" (tooth 4.8) to status "3" (Absent)
+    Then the system updates the tooth status
+    And responds with 200 OK
+
+  Scenario: Add an item to a prescription
+    Given the endpoint POST /api/v1/prescription-items is available
+    When the odontologist adds "Amoxicillin 500mg" to prescription "15"
+    Then the system registers the item in the prescription
+    And responds with 201 Created
+
+  Scenario: Retrieve tooth status catalog
+    Given the endpoint GET /api/v1/tooth-status is available
+    When the odontologist requests the catalog
+    Then the system returns 200 OK and the list of statuses (e.g., "Caries", "Absent", "Restoration")
+
+  Scenario: Retrieve all clinical record entries for a patient (US11)
+    Given the endpoint GET /api/v1/clinical-record-entries/clinical-record-id/1 is available
+    When the odontologist requests the entries for clinical record "1"
+    Then the system returns 200 OK and the list of evolutions (clinical record entries)
